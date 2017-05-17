@@ -1,34 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <VBox alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="jp.kuwa72.manhole.Controller">
-   <children>
-      <MenuBar>
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#quit" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-              <SeparatorMenuItem />
-              <MenuItem mnemonicParsing="false" text="Config" onAction="#config" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-   </children>
+    <children>
+        <MenuBar>
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#quit" text="Close"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Delete"/>
+                        <SeparatorMenuItem/>
+                        <MenuItem mnemonicParsing="false" text="Config" onAction="#showConfigDialog"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <HBox>
+            <VBox>
+                <Label>件名</Label>
+                <TextField fx:id="subjectField"></TextField>
+                <ListView fx:id="subjectList"></ListView>
+            </VBox>
+            <VBox>
+                <Label>カテゴリ</Label>
+                <ListView fx:id="categoryList"></ListView>
+            </VBox>
+            <VBox>
+                <Label>システム</Label>
+                <ListView fx:id="systemList"></ListView>
+            </VBox>
+            <VBox>
+                <Label>プロジェクト</Label>
+                <ListView fx:id="projectList"></ListView>
+            </VBox>
+            <VBox>
+                <Label>支払い</Label>
+                <ListView fx:id="paymentList"></ListView>
+            </VBox>
+            <VBox>
+                <Label>対応日</Label>
+                <DatePicker fx:id="startDatePicker"></DatePicker>
+            </VBox>
+            <VBox>
+                <Label>稼働時間</Label>
+                <Button fx:id="button05"></Button>
+                <Button fx:id="button10"></Button>
+                <Button fx:id="button15"></Button>
+                <Button fx:id="button20"></Button>
+                <Button fx:id="button25"></Button>
+                <Button fx:id="button30"></Button>
+                <Button fx:id="button35"></Button>
+                <Button fx:id="button40"></Button>
+                <Button fx:id="button80"></Button>
+            </VBox>
+        </HBox>
+    </children>
 </VBox>

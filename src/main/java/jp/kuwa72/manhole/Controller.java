@@ -1,14 +1,15 @@
 package jp.kuwa72.manhole;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.taskadapter.redmineapi.IssueManager;
 import com.taskadapter.redmineapi.RedmineException;
 import com.taskadapter.redmineapi.RedmineManager;
 import com.taskadapter.redmineapi.RedmineManagerFactory;
-import com.taskadapter.redmineapi.bean.*;
+import com.taskadapter.redmineapi.bean.CustomFieldFactory;
+import com.taskadapter.redmineapi.bean.Issue;
+import com.taskadapter.redmineapi.bean.IssueCategoryFactory;
+import com.taskadapter.redmineapi.bean.IssueFactory;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,7 +32,10 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -46,21 +50,42 @@ public class Controller {
 
     private Config config;
 
-    @FXML public TextField subjectField;
-    @FXML public ListView<String> subjectList;
-    @FXML public ListView<Item> categoryList;
-    @FXML public ListView<Item> systemList;
-    @FXML public ListView<Item> projectList;
-    @FXML public ListView<Item> paymentList;
-    @FXML public Button button05;
-    @FXML public Button button1;
-    @FXML public Button button2;
-    @FXML public Button button4;
-    @FXML public DatePicker startDatePicker;
+    @FXML
+    public TextField subjectField;
+    @FXML
+    public ListView<String> subjectList;
+    @FXML
+    public ListView<Item> categoryList;
+    @FXML
+    public ListView<Item> systemList;
+    @FXML
+    public ListView<Item> projectList;
+    @FXML
+    public ListView<Item> paymentList;
+    @FXML
+    public Button button05;
+    @FXML
+    public Button button10;
+    @FXML
+    public Button button15;
+    @FXML
+    public Button button20;
+    @FXML
+    public Button button25;
+    @FXML
+    public Button button30;
+    @FXML
+    public Button button35;
+    @FXML
+    public Button button40;
+    @FXML
+    public Button button80;
+    @FXML
+    public DatePicker startDatePicker;
 
 
-
-    @FXML public void initialize() {
+    @FXML
+    public void initialize() {
 
         this.categoryList.setCellFactory(p -> new ItemListCell());
         this.systemList.setCellFactory(p -> new ItemListCell());
@@ -152,13 +177,15 @@ public class Controller {
 
     }
 
-    @FXML public void quit() throws IOException {
+    @FXML
+    public void quit() throws IOException {
         config.subjects = subjectList.getItems();
         (new ConfigurationStore()).save(config);
         Platform.exit();
     }
 
-    @FXML public void showConfigDialog(ActionEvent event) {
+    @FXML
+    public void showConfigDialog(ActionEvent event) {
         Parent root = null;
         FXMLLoader loader = null;
 
@@ -174,7 +201,7 @@ public class Controller {
         Stage configStage = new Stage();
         configStage.setScene(new Scene(root));
         configStage.initModality(Modality.APPLICATION_MODAL);
-        configStage.initOwner(((MenuItem)event.getSource()).getParentPopup().getScene().getWindow());
+        configStage.initOwner(((MenuItem) event.getSource()).getParentPopup().getScene().getWindow());
 
         FXMLLoader finalLoader = loader;
         configStage.setOnCloseRequest(event1 -> {
@@ -214,7 +241,7 @@ public class Controller {
         RedmineManager rm = RedmineManagerFactory.createWithApiKey(config.url, config.apikey);
         IssueManager im = rm.getIssueManager();
 
-        Issue issue = collectIssue(192,132, kousuu);
+        Issue issue = collectIssue(192, 132, kousuu);
 
         try {
             Issue issue1 = im.createIssue(issue);
@@ -223,6 +250,7 @@ public class Controller {
             e.printStackTrace();
         }
     }
+
     public void post05(ActionEvent event) {
         createIssue("0.5");
     }
@@ -259,7 +287,9 @@ public class Controller {
         createIssue("8.0");
     }
 
-    /** java.time.LocalDateTime >> java.util.Date **/
+    /**
+     * java.time.LocalDateTime >> java.util.Date
+     **/
     public Date localDateTimeToDate(LocalDate localDate) {
         ZoneId zone = ZoneId.systemDefault();
         ZonedDateTime zonedDateTime = ZonedDateTime.of(localDate.atStartOfDay(), zone);

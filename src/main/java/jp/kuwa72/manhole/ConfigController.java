@@ -21,7 +21,8 @@ public class ConfigController {
     @FXML
     private TextField urlField;
 
-    @FXML public void initialize() {
+    @FXML
+    public void initialize() {
         String userProfile = System.getProperty("user.home");
 
         ConfigurationStore configurationStore = new ConfigurationStore();
