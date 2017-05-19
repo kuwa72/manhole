@@ -17,6 +17,7 @@
     <HBox>
         <Label text="APIKey"/>
         <TextField fx:id="apikeyField"/>
+        <Button></Button>
     </HBox>
 
     <HBox>

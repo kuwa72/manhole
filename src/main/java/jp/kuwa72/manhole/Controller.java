@@ -135,6 +135,12 @@ public class Controller {
 
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                asyncHttpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -149,9 +155,9 @@ public class Controller {
 
     public void loadItems() {
         login();
-        AsyncHttpClient asyncHttpClient = new DefaultAsyncHttpClient(
-                new DefaultAsyncHttpClientConfig.Builder().setFollowRedirect(true).build());
-        try {
+
+        try (AsyncHttpClient asyncHttpClient = new DefaultAsyncHttpClient(
+                new DefaultAsyncHttpClientConfig.Builder().setFollowRedirect(true).build())) {
             Future<Response> f = asyncHttpClient.prepareGet(config.url + "/projects/work_mng/issues/new")
                     .setCookies(cookies)
                     .execute();
@@ -171,7 +177,7 @@ public class Controller {
             this.projectList.getItems().addAll(config.project);
             this.paymentList.getItems().addAll(config.payment);
 
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException | ExecutionException | IOException e) {
             e.printStackTrace();
         }
 
@@ -215,7 +221,6 @@ public class Controller {
             }
         });
         configStage.showAndWait();
-
     }
 
     public void inputSubject(ActionEvent event) throws IOException {

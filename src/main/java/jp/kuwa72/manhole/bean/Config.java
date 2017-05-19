@@ -7,6 +7,7 @@ public class Config {
     public String password;
     public String apikey;
     public String url;
+    public String autherId;
 
     public List subjects;
     public List<Item> category;

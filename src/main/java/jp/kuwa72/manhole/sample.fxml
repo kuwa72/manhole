@@ -30,7 +30,7 @@
         <HBox>
             <VBox>
                 <Label>件名</Label>
-                <TextField fx:id="subjectField"></TextField>
+                <TextField fx:id="subjectField" onAction="#inputSubject"></TextField>
                 <ListView fx:id="subjectList"></ListView>
             </VBox>
             <VBox>
@@ -55,15 +55,15 @@
             </VBox>
             <VBox>
                 <Label>稼働時間</Label>
-                <Button fx:id="button05"></Button>
-                <Button fx:id="button10"></Button>
-                <Button fx:id="button15"></Button>
-                <Button fx:id="button20"></Button>
-                <Button fx:id="button25"></Button>
-                <Button fx:id="button30"></Button>
-                <Button fx:id="button35"></Button>
-                <Button fx:id="button40"></Button>
-                <Button fx:id="button80"></Button>
+                <Button fx:id="button05" onAction="#post05">0.5</Button>
+                <Button fx:id="button10" onAction="#post10">1.0</Button>
+                <Button fx:id="button15" onAction="#post15">1.5</Button>
+                <Button fx:id="button20" onAction="#post20">2.0</Button>
+                <Button fx:id="button25" onAction="#post25">2.5</Button>
+                <Button fx:id="button30" onAction="#post30">3.0</Button>
+                <Button fx:id="button35" onAction="#post35">3.5</Button>
+                <Button fx:id="button40" onAction="#post40">4.0</Button>
+                <Button fx:id="button80" onAction="#post80">8.0</Button>
             </VBox>
         </HBox>
     </children>
