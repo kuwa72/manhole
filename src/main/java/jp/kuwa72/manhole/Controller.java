@@ -1,5 +1,6 @@
 package jp.kuwa72.manhole;
 
+import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.taskadapter.redmineapi.IssueManager;
 import com.taskadapter.redmineapi.RedmineException;
@@ -50,6 +51,9 @@ public class Controller {
 
     private Config config;
 
+    public int width;
+    public int height;
+
     @FXML
     public TextField subjectField;
     @FXML
@@ -82,11 +86,14 @@ public class Controller {
     public Button button80;
     @FXML
     public DatePicker startDatePicker;
+    @FXML
+    public ListView<Item> redmineProjectsList;
 
 
     @FXML
     public void initialize() {
 
+        this.redmineProjectsList.setCellFactory(p -> new ItemListCell());
         this.categoryList.setCellFactory(p -> new ItemListCell());
         this.systemList.setCellFactory(p -> new ItemListCell());
         this.projectList.setCellFactory(p -> new ItemListCell());
@@ -94,17 +101,23 @@ public class Controller {
 
         loadConfig();
         loadItems();
+
+        this.redmineProjectsList.getItems().setAll(
+                new Item[]{
+                        new Item(192, "運用保守 工数管理") ,
+                        new Item(197, "開発作業 工数管理")});
     }
 
     public void loadConfig() {
         this.config = (new ConfigurationStore()).load();
-        this.subjectList.getItems().addAll(config.subjects);
+        this.subjectList.getItems().setAll(config.subjects);
     }
 
     public void login() {
-        AsyncHttpClient asyncHttpClient = new DefaultAsyncHttpClient(
-                new DefaultAsyncHttpClientConfig.Builder().setFollowRedirect(true).build());
-        try {
+        try (AsyncHttpClient asyncHttpClient = new DefaultAsyncHttpClient(
+                new DefaultAsyncHttpClientConfig.Builder().setFollowRedirect(true).build())){
+
+            if (Strings.isNullOrEmpty(config.url)) return; //
 
             Future<Response> f = asyncHttpClient.prepareGet(config.url + "/login")
                     .execute();
@@ -135,12 +148,8 @@ public class Controller {
 
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                asyncHttpClient.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -158,6 +167,9 @@ public class Controller {
 
         try (AsyncHttpClient asyncHttpClient = new DefaultAsyncHttpClient(
                 new DefaultAsyncHttpClientConfig.Builder().setFollowRedirect(true).build())) {
+
+            if (Strings.isNullOrEmpty(config.url)) return; //
+
             Future<Response> f = asyncHttpClient.prepareGet(config.url + "/projects/work_mng/issues/new")
                     .setCookies(cookies)
                     .execute();
@@ -172,10 +184,10 @@ public class Controller {
             config.project = collectItem(doc.getElementById("issue_custom_field_values_57"));
             config.payment = collectItem(doc.getElementById("issue_custom_field_values_58"));
 
-            this.categoryList.getItems().addAll(config.category);
-            this.systemList.getItems().addAll(config.system);
-            this.projectList.getItems().addAll(config.project);
-            this.paymentList.getItems().addAll(config.payment);
+            this.categoryList.getItems().setAll(config.category);
+            this.systemList.getItems().setAll(config.system);
+            this.projectList.getItems().setAll(config.project);
+            this.paymentList.getItems().setAll(config.payment);
 
         } catch (InterruptedException | ExecutionException | IOException e) {
             e.printStackTrace();
@@ -186,6 +198,8 @@ public class Controller {
     @FXML
     public void quit() throws IOException {
         config.subjects = subjectList.getItems();
+        config.width = width;
+        config.height = height;
         (new ConfigurationStore()).save(config);
         Platform.exit();
     }
@@ -225,12 +239,15 @@ public class Controller {
 
     public void inputSubject(ActionEvent event) throws IOException {
         subjectList.getItems().add(subjectField.getText());
+        subjectList.getSelectionModel().select(subjectList.getItems().size() - 1);
         subjectField.clear();
         (new ConfigurationStore()).save(config);
     }
 
-    public Issue collectIssue(int projectId, int autherId, String kousuu) {
-        Issue issue = IssueFactory.create(projectId, subjectList.getSelectionModel().getSelectedItem());
+    public Issue collectIssue(Item projectId, String subject, int autherId, String kousuu) {
+        Issue issue = new Issue();
+        issue.setProjectId(Integer.parseInt(projectId.id));
+        issue.setSubject(subject);
         issue.setAuthorId(autherId); //XXX fixed
         issue.setCategory(IssueCategoryFactory.create(Integer.parseInt(categoryList.getSelectionModel().getSelectedItem().id)));
         issue.addCustomField(CustomFieldFactory.create(32, "システム分類", systemList.getSelectionModel().getSelectedItem().name));
@@ -246,11 +263,14 @@ public class Controller {
         RedmineManager rm = RedmineManagerFactory.createWithApiKey(config.url, config.apikey);
         IssueManager im = rm.getIssueManager();
 
-        Issue issue = collectIssue(192, 132, kousuu);
+        Issue issue = collectIssue(this.redmineProjectsList.getSelectionModel().getSelectedItem()
+                , subjectList.getSelectionModel().getSelectedItem()
+                , 132
+                , kousuu);
 
         try {
             Issue issue1 = im.createIssue(issue);
-            System.out.println((new Gson()).toJson(issue1)); //XXX
+            System.out.println(issue1); //XXX
         } catch (RedmineException e) {
             e.printStackTrace();
         }

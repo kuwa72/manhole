@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.112"
+      fx:controller="jp.kuwa72.manhole.ConfigController">
+    <HBox>
+        <Label text="ID"/>
+        <TextField fx:id="idField"/>
+    </HBox>
+
+    <HBox>
+        <Label text="Password"/>
+        <TextField fx:id="passwordField"/>
+    </HBox>
+
+    <HBox>
+        <Label text="APIKey"/>
+        <TextField fx:id="apikeyField"/>
+        <Button></Button>
+    </HBox>
+
+    <HBox>
+        <Label text="URL"/>
+        <TextField fx:id="urlField"/>
+    </HBox>
+</VBox>

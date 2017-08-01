@@ -6,17 +6,26 @@
  * user guide available at https://docs.gradle.org/3.5/userguide/tutorial_java_projects.html
  */
 
+buildscript {
+    dependencies {
+        classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
 
-// Apply the application plugin to add support for building an application
-apply plugin: 'application'
+apply plugin: 'javafx-gradle-plugin'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-    // Use jcenter for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+    mavenLocal()
+    mavenCentral()
 }
 
 dependencies {
@@ -37,6 +46,10 @@ dependencies {
 
 }
 
-// Define the main class for the application
-mainClassName = 'jp.kuwa72.manhole.Main'
-
+jfx {
+    // minimal requirement for jfxJar-task
+    mainClass = 'jp.kuwa72.manhole.Main'
+    copyAdditionalAppResourcesToJar = true
+    // minimal requirement for jfxNative-task
+    vendor = 'YourName'
+}

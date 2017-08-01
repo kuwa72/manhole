@@ -9,6 +9,9 @@ public class Config {
     public String url;
     public String autherId;
 
+    public int height;
+    public int width;
+
     public List subjects;
     public List<Item> category;
     public List<Item> system;
